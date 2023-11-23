@@ -43,7 +43,7 @@ usage: |-
     jobs:
       example:
         outputs:
-          result: "${{ steps.current.outputs.output }}"  
+          result: "${{ steps.current.outputs.output }}"
         steps:
           - uses: cloudposse/github-action-jq@main
             id: current

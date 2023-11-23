@@ -62,7 +62,7 @@ jobs:
           body: |-
             ## what
             This is an auto-generated PR that updates the README.md and docs
-            
+
             ## why
             To have most recent changes of README.md and doc from origin templates
 
