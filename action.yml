@@ -23,7 +23,7 @@ outputs:
   output:
     description: Output from the jq command
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
 branding:
   icon: chevron-right
