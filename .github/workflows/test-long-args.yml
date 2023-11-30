@@ -22,11 +22,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: 1arp/create-a-file-action@0.3
-        with:
-          path: ./
-          file: 'tmp.json'
-          content: |
+      - shell: bash
+        run: |
+          echp "${CONTENT}" > ./tmp.json
+        env:
+          CONTENT: |
             [
               {
                 "component": "vpc-peering-v1",
@@ -4450,6 +4450,7 @@ jobs:
                 "affected": "component"
               }
             ]
+            
 
       - uses: ./
         id: current
