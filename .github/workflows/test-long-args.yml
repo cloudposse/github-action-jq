@@ -24,7 +24,7 @@ jobs:
 
       - shell: bash
         run: |
-          echp "${CONTENT}" > ./tmp.json
+          echo "${CONTENT}" > ./tmp.json
         env:
           CONTENT: |
             [
