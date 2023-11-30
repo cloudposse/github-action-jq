@@ -2,7 +2,7 @@ name: 'JQ eval'
 description: 'Run JQ on a JSON value'
 inputs:
   input:
-    description: JSON formatted string
+    description: JSON file or JSON formatted string
     required: true
   script:
     description: JQ query string

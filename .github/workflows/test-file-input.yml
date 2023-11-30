@@ -1,0 +1,83 @@
+name: Test file input
+on:
+#  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
+#  #
+#  # Added pull_request to register workflow from the PR.
+#  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
+#  pull_request: {}
+  workflow_dispatch: {}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        run: echo "Do setup"
+
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: 1arp/create-a-file-action@0.3
+        with:
+          path: './'
+          file: 'tmp.json'
+          content: |
+            [
+              {
+                "component": "aws-backup-rds-monthly",
+                "component_type": "terraform",
+                "component_path": "components/terraform/aws-backup",
+                "stack": "ue1-cptestdev",
+                "stack_slug": "ue1-cptestdev-aws-backup-rds-monthly",
+                "spacelift_stack": "ue1-cptestdev-aws-backup-rds-monthly",
+                "affected": "component"
+              },
+              {
+                "component": "data-r-service-output",
+                "component_type": "terraform",
+                "component_path": "components/terraform/s3-bucket",
+                "stack": "ue1-cptestdev",
+                "stack_slug": "ue1-cptestdev-data-r-service-output",
+                "spacelift_stack": "ue1-cptestdev-data-r-service-output",
+                "affected": "component"
+              }
+            ]
+
+      - uses: ./
+        id: current
+        with:
+          compact: true
+          input: ./tmp.json
+          script: |-
+            map(select(.stack_slug == "ue1-cptestdev-data-r-service-output"))
+
+    outputs:
+      result: "${{ steps.current.outputs.output }}"
+      outcome: "${{ steps.current.outcome }}"
+
+  assert:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: 'success'
+          actual: ${{ needs.test.outputs.outcome }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: '[{"component":"data-r-service-output","component_type":"terraform","component_path":"components/terraform/s3-bucket","stack":"ue1-cptestdev","stack_slug":"ue1-cptestdev-data-r-service-output","spacelift_stack":"ue1-cptestdev-data-r-service-output","affected":"component"}]'
+          actual: ${{ needs.test.outputs.result }}
+
+  teardown:
+    runs-on: ubuntu-latest
+    needs: [assert]
+    if: ${{ always() }}
+    steps:
+      - name: Tear down
+        run: echo "Do Tear down"

@@ -97,7 +97,7 @@ It's 100% Open Source and licensed under the [MIT](LICENSE).
 | Name | Description | Default | Required |
 |------|-------------|---------|----------|
 | compact | Compact instead of pretty-printed output | false | false |
-| input | JSON formatted string | N/A | true |
+| input | JSON file or JSON formatted string | N/A | true |
 | raw-output | Output raw strings, not JSON texts | false | false |
 | remove-trailing-newline | Remove trailing newline | true | false |
 | script | JQ query string | N/A | true |

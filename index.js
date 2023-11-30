@@ -2,6 +2,7 @@ const core = require('@actions/core');
 const io = require('@actions/io');
 const tc = require('@actions/tool-cache');
 const ex = require('@actions/exec');
+const fs = require('fs');
 
 //async function ensureBinDir() {
 //  bindir = `${process.env.HOME}/.local/bin`
@@ -53,21 +54,35 @@ async function run() {
     const input = core.getInput("input", {required: true});
     const script = core.getInput("script", {required: true});
     const flags = [];
+    const args = [];
     if (core.getInput("compact") === 'true') {
       flags.push('c');
     }
     if (core.getInput("raw-output") === 'true') {
       flags.push('r');
     }
-    const args = flags.length > 0 ? [`-${flags.join('')}`, script] : [script];
-    await ex.exec(jq, args, {
+
+    if (flags.length > 0) {
+      args.push(`-${flags.join('')}`);
+    }
+
+    args.push(script);
+
+    const context = {
       listeners: {
         stdout: (data) => {
           output += data.toString();
         }
-      },
-      input: Buffer.from(input, 'utf8')
-    });
+      }
+    }
+
+    if (fs.existsSync(input)) {
+      args.push(input);
+    } else {
+      context["input"] = Buffer.from(input, 'utf8')
+    }
+
+    await ex.exec(jq, args, context);
     if (core.getInput("remove-trailing-newline", {required: false}) === "true") {
       output = output.replace(/\r?\n$/, "");
     }
