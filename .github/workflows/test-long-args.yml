@@ -3009,7 +3009,7 @@ jobs:
           compact: true
           input: ./tmp.json
           script: |-
-            map(select(. == "test"))
+            map(select(.component == "data-r-service-output"))
 
     outputs:
       result: "${{ steps.current.outputs.output }}"
