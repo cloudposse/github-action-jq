@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const io = require('@actions/io');
 const tc = require('@actions/tool-cache');
 const ex = require('@actions/exec');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 //async function ensureBinDir() {
 //  bindir = `${process.env.HOME}/.local/bin`
