@@ -22,11 +22,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: ./
-        id: current
+      - uses: 1arp/create-a-file-action@0.3
         with:
-          compact: true
-          input: |
+          path: ./
+          file: 'tmp.json'
+          content: |
             [
               {
                 "component": "vpc-peering-v1",
@@ -4450,6 +4450,12 @@ jobs:
                 "affected": "component"
               }
             ]
+
+      - uses: ./
+        id: current
+        with:
+          compact: true
+          input: ./tmp.json
           script: |-
             map(select(. == "test"))
 
