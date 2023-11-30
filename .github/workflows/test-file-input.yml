@@ -1,10 +1,10 @@
-name: Test long args
+name: Test file input
 on:
 #  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
 #  #
 #  # Added pull_request to register workflow from the PR.
 #  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
-#  pull_request: {}
+  pull_request: {}
   workflow_dispatch: {}
 
 jobs:
@@ -22,22 +22,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install envsubst
-        uses: jaxxstorm/action-install-gh-release@v1.10.0
-        with:
-          repo: a8m/envsubst
-          tag: v1.4.1
-
       - uses: 1arp/create-a-file-action@0.3
         with:
           path: './'
-          file: 'template.json'
-          content: "${CONTENT}"
-
-      - shell: bash
-        run: "envsubst < ./template.json > ./tmp.json"
-        env:
-          CONTENT: |
+          file: 'tmp.json'
+          content: |
             [
               {
                 "component": "aws-backup-rds-monthly",
