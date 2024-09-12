@@ -5,3 +5,4 @@ repository:
   description: Process a value with a jq script and output to a step output.
   homepage: https://cloudposse.com/accelerate
   topics: ""
+
